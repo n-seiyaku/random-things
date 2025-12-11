@@ -180,7 +180,7 @@ export function OtpViewer() {
               <div className="mt-4 flex items-center justify-between gap-4">
                 <div className="flex-1 text-center">
                   <p className="font-mono text-4xl tracking-[0.35em] text-zinc-50 sm:text-5xl">
-                    {data?.otp ?? '———'}
+                    {data?.otp ?? '——————'}
                   </p>
                 </div>
 
