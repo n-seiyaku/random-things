@@ -1,4 +1,4 @@
-import { Language, Translations } from '../types/type'
+import { Language, Translations } from '../../types/type'
 
 export const translations: Record<Language, Translations> = {
   vi: {

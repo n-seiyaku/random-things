@@ -10,13 +10,13 @@ import {
   ClipboardEventHandler,
 } from 'react'
 import QrScanner from 'qr-scanner'
-import { translations } from '../language/language'
-import LanguageSelect from '../components/LanguageSelect'
-import { CornerPoint, Language, ScanStatus } from '../types/type'
-import { cropQRFromSource } from '../utils/cropQRFromSrc'
-import CameraScan from '../components/CameraScan'
-import ImageScan from '../components/ImageScan'
-import FeatureSelect from '../components/FeatureSelect'
+import { translations } from '../../utils/language/language'
+import LanguageSelect from '../../components/LanguageSelect'
+import { CornerPoint, Language, ScanStatus } from '../../types/type'
+import { cropQRFromSource } from '../../utils/cropQRFromSrc'
+import CameraScan from '../../components/CameraScan'
+import ImageScan from '../../components/ImageScan'
+import FeatureSelect from '../../components/FeatureSelect'
 
 export default function QrScannerPage() {
   const [language, setLanguage] = useState<Language>('vi')
