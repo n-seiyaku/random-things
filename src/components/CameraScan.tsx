@@ -22,6 +22,9 @@ export default function CameraScan({
   // Camera state
   const [isCameraActive, setIsCameraActive] = useState(false)
   const [cameraError, setCameraError] = useState<string | null>(null)
+  const [cameraType, setCameraType] = useState<'environment' | 'user'>(
+    'environment'
+  )
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const cameraScannerRef = useRef<QrScanner | null>(null)
 
@@ -79,7 +82,7 @@ export default function CameraScan({
           returnDetailedScanResult: true,
           highlightScanRegion: true,
           highlightCodeOutline: true,
-          preferredCamera: 'environment',
+          preferredCamera: cameraType,
         }
       )
 
@@ -126,6 +129,26 @@ export default function CameraScan({
             muted
             playsInline
           />
+
+          {isCameraActive && (
+            <button
+              type="button"
+              aria-label="Đổi cam trước/sau"
+              onClick={() => {
+                setCameraType((type) =>
+                  type === 'environment' ? 'user' : 'environment'
+                )
+                if (isCameraActive) toggleCamera().then(toggleCamera)
+              }}
+              className="absolute top-5 right-4 z-20 m-0 p-0 text-zinc-100 transition disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              {/* icon chuyển camera */}
+              <span className="material-symbols-outlined flex h-9 w-9 items-center justify-center rounded-full bg-transparent p-0 text-[2rem] shadow-none">
+                flip_camera_android
+              </span>
+            </button>
+          )}
+
           {!isCameraActive && (
             <span className="absolute px-4 text-center text-[11px] text-zinc-500">
               {t.camera.hint}
@@ -138,17 +161,19 @@ export default function CameraScan({
         <p className="text-[11px] text-rose-400">{t.camera.error}</p>
       )}
 
-      <button
-        type="button"
-        onClick={toggleCamera}
-        className={`inline-flex items-center justify-center rounded-full border px-4 py-1.5 text-[11px] font-medium transition ${
-          isCameraActive
-            ? 'border-rose-500/70 bg-rose-600/80 text-rose-50 hover:bg-rose-500'
-            : 'border-emerald-500/70 bg-emerald-600/80 text-emerald-50 hover:bg-emerald-500'
-        }`}
-      >
-        {isCameraActive ? t.camera.stop : t.camera.start}
-      </button>
+      <div className="flex gap-2">
+        <button
+          type="button"
+          onClick={toggleCamera}
+          className={`inline-flex items-center justify-center rounded-full border px-4 py-1.5 text-[11px] font-medium transition ${
+            isCameraActive
+              ? 'border-rose-500/70 bg-rose-600/80 text-rose-50 hover:bg-rose-500'
+              : 'border-emerald-500/70 bg-emerald-600/80 text-emerald-50 hover:bg-emerald-500'
+          }`}
+        >
+          {isCameraActive ? t.camera.stop : t.camera.start}
+        </button>
+      </div>
 
       <p className="text-[10px] text-zinc-500">{t.camera.note}</p>
     </div>

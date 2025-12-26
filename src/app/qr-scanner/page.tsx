@@ -272,29 +272,6 @@ export default function QrScannerPage() {
           <p className="text-sm text-zinc-400">{t.heroDesc}</p>
         </div>
 
-        {/* <div className="flex w-40 rounded-full bg-zinc-800 p-1">
-          <button
-            onClick={() => setFeature('camera')}
-            className={`flex-1 rounded-full px-3 py-1.5 text-xs font-medium transition-all ${
-              feature === 'camera'
-                ? 'bg-emerald-600 text-white shadow'
-                : 'text-zinc-400'
-            }`}
-          >
-            Camera
-          </button>
-          <button
-            onClick={() => setFeature('image')}
-            className={`flex-1 rounded-full px-3 py-1.5 text-xs font-medium transition-all ${
-              feature === 'image'
-                ? 'bg-emerald-600 text-white shadow'
-                : 'text-zinc-400'
-            }`}
-          >
-            Image
-          </button>
-        </div> */}
-
         <FeatureSelect feature={feature} setFeature={handleFeatureChange} />
 
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1.4fr),minmax(0,1fr)]">
