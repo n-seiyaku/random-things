@@ -1,4 +1,3 @@
-// app/api/oauth2callback/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { exchangeCodeForTokens } from '@/lib/googleOAuth'
 import { saveTokens } from '@/lib/tokenStore'
@@ -409,18 +408,26 @@ export async function GET(req: NextRequest) {
     const expiresAt =
       typeof tokens.expiry_date === 'number' ? tokens.expiry_date : null
 
+    let saveStatus = 'success'
+    let saveMessage = 'Token đã được cập nhật thành công trên Neon database.'
+    
     try {
       await saveTokens({
         refreshToken: tokens.refresh_token ?? null,
         accessToken: tokens.access_token ?? null,
         expiresAt,
       })
+      console.log('[oauth2callback] Tokens saved/updated to Neon successfully')
     } catch (persistErr) {
-      console.error('Save tokens to Neon failed:', persistErr)
+      console.error('[oauth2callback] Save tokens to Neon failed:', persistErr)
+      saveStatus = 'warning'
+      const errorMsg = persistErr instanceof Error ? persistErr.message : String(persistErr)
+      saveMessage = `Cảnh báo: Không thể lưu token vào Neon database. Lỗi: ${escapeHtml(errorMsg)}`
     }
 
     const safeRefreshToken = escapeHtml(refreshToken)
     const safeAccessToken = escapeHtml(accessToken)
+    const safeSaveMessage = escapeHtml(saveMessage)
 
     const html = buildPage({
       title: 'Gmail OAuth Tokens',
@@ -429,9 +436,14 @@ export async function GET(req: NextRequest) {
       status: 'success',
       bodyHtml: `
         <p class="subtitle">
-          Hãy copy <code>refresh_token</code> bên dưới và dán vào file
-          <code>.env.local</code> (local) hoặc vào biến môi trường trên server của bạn.
+          Token đã được lấy thành công từ Google. ${saveStatus === 'success' ? 'Token đã được cập nhật vào Neon database.' : ''}
         </p>
+
+        ${saveStatus === 'warning' ? `
+          <div class="error-pre" style="margin-bottom: 18px;">
+            ⚠️ ${safeSaveMessage}
+          </div>
+        ` : ''}
 
         <div class="section-title">REFRESH TOKEN</div>
         <pre class="token-block primary">${safeRefreshToken}</pre>

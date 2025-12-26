@@ -14,25 +14,25 @@
   "dependencies": {
     "@gsap/react": "^2.1.2",
     "@neondatabase/serverless": "^1.0.2",
-    "@opennextjs/cloudflare": "^1.14.4",
+    "@opennextjs/cloudflare": "^1.14.7",
     "googleapis": "^167.0.0",
-    "gsap": "^3.13.0",
+    "gsap": "^3.14.2",
     "next": "16.0.7",
     "qr-scanner": "^1.4.2",
     "react": "19.2.0",
     "react-dom": "19.2.0"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
+    "@tailwindcss/postcss": "^4.1.18",
+    "@types/node": "^20.19.27",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^9.39.2",
     "eslint-config-next": "16.0.4",
-    "prettier": "^3.6.2",
-    "prettier-plugin-tailwindcss": "^0.7.1",
-    "tailwindcss": "^4",
-    "typescript": "^5",
-    "wrangler": "^4.53.0"
+    "prettier": "^3.7.4",
+    "prettier-plugin-tailwindcss": "^0.7.2",
+    "tailwindcss": "^4.1.18",
+    "typescript": "^5.9.3",
+    "wrangler": "^4.54.0"
   }
 }

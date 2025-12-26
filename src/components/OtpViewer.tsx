@@ -106,7 +106,7 @@ export function OtpViewer() {
           : 'Đang chờ OTP mới'
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center bg-linear-to-br from-zinc-950 via-black to-zinc-900 px-4 py-10 text-zinc-50">
+    <div className="relative flex min-h-screen items-center justify-center bg-linear-to-br from-zinc-950 via-black to-zinc-900 px-4 pt-20 pb-10 text-zinc-50">
       {/* Toast nhỏ bên dưới */}
       {toast && (
         <div className="pointer-events-none fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-full border border-emerald-500/40 bg-zinc-900/90 px-4 py-2 text-xs text-emerald-50 shadow-[0_18px_60px_-28px_rgba(16,185,129,0.9)]">

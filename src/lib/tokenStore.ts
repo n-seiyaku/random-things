@@ -66,23 +66,24 @@ export async function saveTokens({
   expiresAt?: number | null
 }) {
   const sql = getClient()
-  if (!sql) return
+  if (!sql) {
+    console.warn('[tokenStore] No DB client; skipping save')
+    return
+  }
 
   try {
-    const query = `
-      insert into "${TABLE_NAME}" (id, access_token, refresh_token, expires_at)
-      values ('${TOKEN_ROW_ID}', ${
-        accessToken ? `'${accessToken}'` : 'null'
-      }, ${
-        refreshToken ? `'${refreshToken}'` : 'null'
-      }, ${typeof expiresAt === 'number' ? expiresAt : 'null'})
-      on conflict (id) do update set
-        access_token = excluded.access_token,
-        refresh_token = excluded.refresh_token,
-        expires_at = excluded.expires_at;
+    // Use parameterized query with ON CONFLICT to update if exists
+    await sql`
+      INSERT INTO ${sql.unsafe(TABLE_NAME)} (id, access_token, refresh_token, expires_at)
+      VALUES (${TOKEN_ROW_ID}, ${accessToken}, ${refreshToken}, ${expiresAt})
+      ON CONFLICT (id) DO UPDATE SET
+        access_token = EXCLUDED.access_token,
+        refresh_token = EXCLUDED.refresh_token,
+        expires_at = EXCLUDED.expires_at
     `
-    await sql.unsafe(query)
+    console.log('[tokenStore] Tokens saved/updated successfully')
   } catch (err) {
-    console.error('Neon saveTokens error:', err)
+    console.error('[tokenStore] Save tokens error:', err)
+    throw err // Re-throw để route handler có thể xử lý
   }
 }

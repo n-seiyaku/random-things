@@ -249,7 +249,7 @@ export default function QrScannerPage() {
   }
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center bg-linear-to-br from-zinc-900 via-black to-zinc-900 px-4 py-10 text-zinc-50">
+    <div className="relative flex min-h-screen items-center justify-center bg-linear-to-br from-zinc-900 via-black to-zinc-900 px-4 pt-20 pb-10 text-zinc-50">
       {isDragging && (
         <div className="pointer-events-none fixed inset-0 z-40 flex items-center justify-center">
           <div className="absolute inset-0 border border-dashed border-emerald-400/60 bg-emerald-500/10 backdrop-blur-[2px]" />
