@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Random Things Studio',
+  title: 'Random Things',
   description: 'Bộ sưu tập các tiện ích hữu ích',
 }
 

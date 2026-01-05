@@ -8,7 +8,7 @@ export default function Home() {
           <div className="flex justify-center">
             <span className="inline-flex items-center gap-2 text-xs font-medium tracking-[0.2em] text-zinc-400 uppercase">
               <span className="h-px w-6 bg-zinc-600" />
-              Random Things Studio
+              Random Things
               <span className="h-px w-6 bg-zinc-600" />
             </span>
           </div>

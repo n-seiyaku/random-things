@@ -1,7 +1,7 @@
 import QrScanner from 'qr-scanner'
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
-import { CornerPoint, ScanStatus, Translations } from '../types/type'
-import { cropQRFromSource } from '../utils/cropQRFromSrc'
+import { CornerPoint, ScanStatus, Translations } from '@/types/type'
+import { cropQRFromSource } from '@/utils/cropQRFromSrc'
 import Image from 'next/image'
 
 export default function CameraScan({

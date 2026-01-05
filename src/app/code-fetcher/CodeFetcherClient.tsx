@@ -9,7 +9,7 @@ type OtpResponse = {
   error?: string
 }
 
-export function OtpViewer() {
+export function CodeFetcherClient() {
   const [data, setData] = useState<OtpResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null)

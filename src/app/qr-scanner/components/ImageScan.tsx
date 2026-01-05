@@ -4,7 +4,7 @@ import {
   ClipboardEventHandler,
   DragEvent as ReactDragEvent,
 } from 'react'
-import { Translations } from '../types/type'
+import { Translations } from '@/types/type'
 
 type ImageScanProps = {
   qrOnlyUrl: string
