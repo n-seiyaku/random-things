@@ -348,10 +348,6 @@ export default function QrScannerPage() {
                       {t.buttons.reset}
                     </button>
                   </div>
-
-                  <p className="mt-3 text-right text-[10px] text-zinc-500">
-                    github.com/n-seiyaku
-                  </p>
                 </div>
               </div>
             </div>

@@ -134,11 +134,86 @@ export default function CameraScan({
             <button
               type="button"
               aria-label="Đổi cam trước/sau"
-              onClick={() => {
+              onClick={async () => {
+                // Stop camera hiện tại
+                cameraScannerRef.current?.stop()
+                cameraScannerRef.current?.destroy()
+                cameraScannerRef.current = null
+                setIsCameraActive(false)
+
+                // Đợi một chút để camera stop hoàn toàn
+                await new Promise((resolve) => setTimeout(resolve, 100))
+
+                // Thay đổi camera type
                 setCameraType((type) =>
                   type === 'environment' ? 'user' : 'environment'
                 )
-                if (isCameraActive) toggleCamera().then(toggleCamera)
+
+                // Start camera mới với camera type đã thay đổi
+                if (videoRef.current) {
+                  try {
+                    const scanner = new QrScanner(
+                      videoRef.current,
+                      async (result) => {
+                        const data = result.data as string
+                        const cornerPoints = result.cornerPoints as
+                          | CornerPoint[]
+                          | undefined
+
+                        setDecoded(data)
+                        setStatus('success')
+                        setMessage(t.cameraFound)
+
+                        // --- CẮT QR TỪ FRAME HIỆN TẠI CỦA VIDEO ---
+                        if (
+                          videoRef.current &&
+                          cornerPoints &&
+                          cornerPoints.length >= 4 &&
+                          videoRef.current.videoWidth > 0
+                        ) {
+                          const video = videoRef.current
+                          const dataUrl = cropQRFromSource(
+                            video.videoWidth,
+                            video.videoHeight,
+                            (ctx) =>
+                              ctx.drawImage(
+                                video,
+                                0,
+                                0,
+                                video.videoWidth,
+                                video.videoHeight
+                              ),
+                            cornerPoints
+                          )
+                          setQrOnlyUrl(dataUrl)
+                        }
+
+                        // Dừng camera & destroy scanner → frame "đứng hình"
+                        if (cameraScannerRef.current) {
+                          await cameraScannerRef.current.stop()
+                          cameraScannerRef.current.destroy()
+                          cameraScannerRef.current = null
+                        }
+                        setIsCameraActive(false)
+                      },
+                      {
+                        returnDetailedScanResult: true,
+                        highlightScanRegion: true,
+                        highlightCodeOutline: true,
+                        preferredCamera: cameraType,
+                      }
+                    )
+
+                    cameraScannerRef.current = scanner
+                    await scanner.start()
+                    setIsCameraActive(true)
+                    setCameraError(null)
+                  } catch (err) {
+                    console.error(err)
+                    setCameraError(t.camera.error)
+                    setIsCameraActive(false)
+                  }
+                }
               }}
               className="absolute top-5 right-4 z-20 m-0 p-0 text-zinc-100 transition disabled:cursor-not-allowed disabled:opacity-40"
             >

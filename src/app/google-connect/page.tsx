@@ -335,10 +335,6 @@ function GoogleConnectContent() {
                 </div>
               </div>
             </div>
-
-            <p className="pt-2 text-right text-[10px] text-zinc-600">
-              github.com/n-seiyaku · OTP utility viewer
-            </p>
           </div>
         </div>
       </div>

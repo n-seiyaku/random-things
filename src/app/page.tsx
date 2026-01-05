@@ -55,10 +55,6 @@ export default function Home() {
             </div>
           </Link>
         </div>
-
-        <p className="mt-10 text-center text-[10px] text-zinc-600">
-          github.com/n-seiyaku · Random Things Studio
-        </p>
       </div>
     </div>
   )
