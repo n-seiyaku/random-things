@@ -19,8 +19,8 @@ export function generateAuthUrl() {
   const oAuth2Client = getOAuthClient()
 
   const authUrl = oAuth2Client.generateAuthUrl({
-    access_type: 'offline', // để lấy refresh_token
-    prompt: 'consent', // bắt Google hỏi lại → luôn trả refresh_token
+    access_type: 'offline', // to get refresh_token
+    prompt: 'consent', // force Google to re-prompt -> always return refresh_token
     scope: SCOPES,
   })
 

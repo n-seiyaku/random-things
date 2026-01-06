@@ -196,37 +196,6 @@ async function fetchWithAutoRefresh(url: URL) {
   return res
 }
 
-// Public function used by /api/latest-otp
-export async function getLatestOtp() {
-  const query =
-    process.env.OTP_SEARCH_QUERY ??
-    'subject:(OTP OR verification code) newer_than:1d'
-
-  const messages = await listMessages(query, 5)
-
-  if (!messages.length) {
-    return null
-  }
-
-  const latestId = messages[0].id
-  if (!latestId) return null
-
-  const msg = await getMessage(latestId)
-
-  const internalDate = msg.internalDate
-    ? new Date(Number(msg.internalDate))
-    : new Date()
-
-  const bodyText = extractPlainTextFromMessage(msg)
-  const otp = extractOtpFromText(bodyText)
-
-  return {
-    otp,
-    receivedAt: internalDate.toISOString(),
-    rawText: bodyText,
-  }
-}
-
 // Extract text/plain from payload
 function extractPlainTextFromMessage(msg: GmailMessage): string {
   const payload = msg.payload
@@ -298,4 +267,35 @@ function extractOtpFromText(text: string | null | undefined): string | null {
   }
 
   return null
+}
+
+// Public function used by /api/latest-otp
+export async function getLatestOtp() {
+  const query =
+    process.env.OTP_SEARCH_QUERY ??
+    'subject:(OTP OR verification code) newer_than:1d'
+
+  const messages = await listMessages(query, 5)
+
+  if (!messages.length) {
+    return null
+  }
+
+  const latestId = messages[0].id
+  if (!latestId) return null
+
+  const msg = await getMessage(latestId)
+
+  const internalDate = msg.internalDate
+    ? new Date(Number(msg.internalDate))
+    : new Date()
+
+  const bodyText = extractPlainTextFromMessage(msg)
+  const otp = extractOtpFromText(bodyText)
+
+  return {
+    otp,
+    receivedAt: internalDate.toISOString(),
+    rawText: bodyText,
+  }
 }

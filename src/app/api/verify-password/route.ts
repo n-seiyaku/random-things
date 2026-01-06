@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { banIp, isIpBanned } from '@/lib/ipBanStore'
+import { getStoredPassword } from '@/lib/passwordStore'
 
-const CORRECT_PASSWORD = '133110'
 const MAX_ATTEMPTS = 5
 
 function getClientIp(req: NextRequest): string {
   const forwarded = req.headers.get('x-forwarded-for')
   const realIp = req.headers.get('x-real-ip')
-  const ip = forwarded ? forwarded.split(',')[0].trim() : (realIp || 'unknown')
+  const ip = forwarded ? forwarded.split(',')[0].trim() : realIp || 'unknown'
   return ip
 }
 
@@ -15,15 +15,18 @@ function getClientIp(req: NextRequest): string {
 const failedAttempts = new Map<string, { count: number; lastAttempt: number }>()
 
 // Clean up old entries every 10 minutes
-setInterval(() => {
-  const now = Date.now()
-  const tenMinutesAgo = now - 10 * 60 * 1000
-  for (const [ip, data] of failedAttempts.entries()) {
-    if (data.lastAttempt < tenMinutesAgo) {
-      failedAttempts.delete(ip)
+setInterval(
+  () => {
+    const now = Date.now()
+    const tenMinutesAgo = now - 10 * 60 * 1000
+    for (const [ip, data] of failedAttempts.entries()) {
+      if (data.lastAttempt < tenMinutesAgo) {
+        failedAttempts.delete(ip)
+      }
     }
-  }
-}, 10 * 60 * 1000)
+  },
+  10 * 60 * 1000
+)
 
 export async function POST(req: NextRequest) {
   try {
@@ -38,9 +41,17 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const { password } = await req.json()
+    const { password, key } = await req.json()
+    const correctPassword = await getStoredPassword(key)
 
-    if (password === CORRECT_PASSWORD) {
+    if (!correctPassword) {
+      return NextResponse.json(
+        { error: 'Server configuration error: No password set' },
+        { status: 500 }
+      )
+    }
+
+    if (password === correctPassword) {
       // Reset failed attempts on success
       failedAttempts.delete(ip)
       return NextResponse.json({ success: true })
@@ -80,4 +91,3 @@ export async function POST(req: NextRequest) {
     )
   }
 }
-

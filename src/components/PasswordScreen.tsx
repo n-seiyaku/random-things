@@ -6,9 +6,11 @@ import Link from 'next/link'
 export default function PasswordScreen({
   onSuccess,
   onBanned,
+  passwordKey,
 }: {
   onSuccess: () => void
   onBanned: () => void
+  passwordKey?: string
 }) {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -26,7 +28,7 @@ export default function PasswordScreen({
       const res = await fetch('/api/verify-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ password, key: passwordKey }),
       })
 
       const data = await res.json()
@@ -42,7 +44,8 @@ export default function PasswordScreen({
           setPassword('')
         }
       }
-    } catch (err) {
+    } catch (err: unknown) {
+      console.error(err)
       setError('Lỗi khi xác thực. Vui lòng thử lại.')
     } finally {
       setIsSubmitting(false)

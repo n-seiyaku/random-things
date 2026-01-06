@@ -1,6 +1,9 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
+import PasswordScreen from '@/components/PasswordScreen'
+import BannedScreen from '@/components/BannedScreen'
+import { CheckingScreen } from '@/components/CheckingScreen'
 
 type OtpResponse = {
   otp: string | null
@@ -10,6 +13,10 @@ type OtpResponse = {
 }
 
 export function CodeFetcherClient() {
+  const [isAuthorized, setIsAuthorized] = useState(false)
+  const [isChecking, setIsChecking] = useState(true)
+  const [isBanned, setIsBanned] = useState(false)
+
   const [data, setData] = useState<OtpResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
@@ -17,6 +24,24 @@ export function CodeFetcherClient() {
   const [toast, setToast] = useState<string | null>(null)
 
   const pollInterval = Number(process.env.NEXT_PUBLIC_POLL_INTERVAL_MS ?? 60000)
+
+  // Check ban status on mount
+  useEffect(() => {
+    const checkBan = async () => {
+      try {
+        const res = await fetch('/api/check-ban')
+        const data = await res.json()
+        if (data.banned) {
+          setIsBanned(true)
+        }
+      } catch (err) {
+        console.error('Failed to check ban status:', err)
+      } finally {
+        setIsChecking(false)
+      }
+    }
+    checkBan()
+  }, [])
 
   const fetchOtp = useCallback(async () => {
     setLoading(true)
@@ -55,10 +80,12 @@ export function CodeFetcherClient() {
   }, [])
 
   useEffect(() => {
-    fetchOtp()
-    const id = setInterval(fetchOtp, pollInterval)
-    return () => clearInterval(id)
-  }, [fetchOtp, pollInterval])
+    if (isAuthorized) {
+      fetchOtp()
+      const id = setInterval(fetchOtp, pollInterval)
+      return () => clearInterval(id)
+    }
+  }, [isAuthorized, fetchOtp, pollInterval])
 
   const copyOtp = async () => {
     if (!data?.otp) return
@@ -94,6 +121,24 @@ export function CodeFetcherClient() {
         : data?.otp
           ? 'Đã có OTP mới'
           : 'Đang chờ OTP mới'
+
+  if (isChecking) {
+    return <CheckingScreen />
+  }
+
+  if (isBanned) {
+    return <BannedScreen />
+  }
+
+  if (!isAuthorized) {
+    return (
+      <PasswordScreen
+        onSuccess={() => setIsAuthorized(true)}
+        onBanned={() => setIsBanned(true)}
+        passwordKey="code-fetcher"
+      />
+    )
+  }
 
   return (
     <div className="relative flex min-h-screen items-center justify-center bg-linear-to-br from-zinc-950 via-black to-zinc-900 px-4 pt-20 pb-10 text-zinc-50">

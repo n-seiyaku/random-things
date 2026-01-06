@@ -1,22 +1,6 @@
-import { neon } from '@neondatabase/serverless'
+import { getClient } from './db'
 
 const TABLE_NAME = process.env.NEON_BANNED_IPS_TABLE ?? 'banned_ips'
-
-function getConnectionString() {
-  const conn =
-    process.env.DATABASE_URL ||
-    process.env.POSTGRES_URL ||
-    process.env.POSTGRES_PRISMA_URL ||
-    process.env.POSTGRES_URL_NON_POOLING ||
-    null
-  return conn
-}
-
-function getClient() {
-  const connectionString = getConnectionString()
-  if (!connectionString) return null
-  return neon(connectionString)
-}
 
 export async function isIpBanned(ip: string): Promise<boolean> {
   const sql = getClient()

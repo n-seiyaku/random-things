@@ -1,4 +1,4 @@
-import { neon } from '@neondatabase/serverless'
+import { getClient } from './db'
 
 type StoredTokens = {
   accessToken?: string | null
@@ -9,22 +9,6 @@ type StoredTokens = {
 const TABLE_NAME = process.env.NEON_TOKENS_TABLE ?? 'google_tokens'
 
 const TOKEN_ROW_ID = process.env.NEON_TOKENS_ID ?? 'gmail'
-
-function getConnectionString() {
-  const conn =
-    process.env.DATABASE_URL ||
-    process.env.POSTGRES_URL ||
-    process.env.POSTGRES_PRISMA_URL ||
-    process.env.POSTGRES_URL_NON_POOLING ||
-    null
-  return conn
-}
-
-function getClient() {
-  const connectionString = getConnectionString()
-  if (!connectionString) return null
-  return neon(connectionString)
-}
 
 export async function getStoredTokens(): Promise<StoredTokens | null> {
   const sql = getClient()
@@ -72,7 +56,7 @@ export async function saveTokens({
   }
 
   try {
-      // Use parameterized query with ON CONFLICT to update if exists
+    // Use parameterized query with ON CONFLICT to update if exists
     await sql`
       INSERT INTO ${sql.unsafe(TABLE_NAME)} (id, access_token, refresh_token, expires_at)
       VALUES (${TOKEN_ROW_ID}, ${accessToken}, ${refreshToken}, ${expiresAt})
