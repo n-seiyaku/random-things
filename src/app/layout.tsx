@@ -16,9 +16,33 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 })
 
+// Replace the simple metadata with a robust one
 export const metadata: Metadata = {
-  title: 'Random Things',
-  description: 'Bộ sưu tập các tiện ích hữu ích',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_URL || 'https://www.nhannt.io.vn/'),
+  title: {
+    default: 'Random Things - Bộ sưu tập tiện ích',
+    template: '%s | Random Things',
+  },
+  description: 'Bộ sưu tập các công cụ và tiện ích hữu ích: QR Scanner, Code Fetcher, Google Connect và nhiều hơn nữa.',
+  openGraph: {
+    title: 'Random Things - Bộ sưu tập tiện ích',
+    description: 'Bộ sưu tập các công cụ và tiện ích hữu ích cho developer và người dùng phổ thông.',
+    url: '/',
+    siteName: 'Random Things',
+    locale: 'vi_VN',
+    type: 'website',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 }
 
 export default function RootLayout({
