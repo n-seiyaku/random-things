@@ -16,24 +16,14 @@ export function CodeFetcherClient() {
   const [error, setError] = useState<string | null>(null)
   const [toast, setToast] = useState<string | null>(null)
 
-  const pollInterval = Number(process.env.NEXT_PUBLIC_POLL_INTERVAL_MS ?? 15000)
-  const authToken = process.env.NEXT_PUBLIC_OTP_AUTH_TOKEN
+  const pollInterval = Number(process.env.NEXT_PUBLIC_POLL_INTERVAL_MS ?? 60000)
 
   const fetchOtp = useCallback(async () => {
-    if (!authToken) {
-      setError('Missing NEXT_PUBLIC_OTP_AUTH_TOKEN')
-      return
-    }
-
     setLoading(true)
     setError(null)
 
     try {
-      const res = await fetch('/api/latest-otp', {
-        headers: {
-          'x-otp-auth': authToken,
-        },
-      })
+      const res = await fetch('/api/latest-otp')
 
       const text = await res.text()
 
@@ -62,7 +52,7 @@ export function CodeFetcherClient() {
     } finally {
       setLoading(false)
     }
-  }, [authToken])
+  }, [])
 
   useEffect(() => {
     fetchOtp()

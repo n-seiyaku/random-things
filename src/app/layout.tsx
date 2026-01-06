@@ -44,6 +44,20 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+  icons: [
+    {
+      rel: 'icon',
+      type: 'image/x-icon',
+      url: '/favicon-light.ico',
+      media: '(prefers-color-scheme: light)',
+    },
+    {
+      rel: 'icon',
+      type: 'image/x-icon',
+      url: '/favicon-dark.ico',
+      media: '(prefers-color-scheme: dark)',
+    },
+  ],
 }
 
 export default function RootLayout({

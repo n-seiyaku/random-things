@@ -5,14 +5,6 @@ export const dynamic = 'force-dynamic' // để luôn chạy server
 
 export async function GET(req: NextRequest) {
   try {
-    // simple auth để không ai gọi trộm API
-    const token = req.headers.get('x-otp-auth')
-    const expected = process.env.OTP_AUTH_TOKEN
-
-    if (!expected || token !== expected) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
     const result = await getLatestOtp()
 
     if (!result) {
