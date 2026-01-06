@@ -97,7 +97,7 @@ export function CodeFetcherClient() {
 
   return (
     <div className="relative flex min-h-screen items-center justify-center bg-linear-to-br from-zinc-950 via-black to-zinc-900 px-4 pt-20 pb-10 text-zinc-50">
-      {/* Toast nhỏ bên dưới */}
+      {/* Mini toast at bottom */}
       {toast && (
         <div className="pointer-events-none fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-full border border-emerald-500/40 bg-zinc-900/90 px-4 py-2 text-xs text-emerald-50 shadow-[0_18px_60px_-28px_rgba(16,185,129,0.9)]">
           {toast}
@@ -119,7 +119,7 @@ export function CodeFetcherClient() {
         </div>
 
         <div className="relative overflow-hidden rounded-3xl border border-zinc-800/70 bg-zinc-950/80 p-6 shadow-[0_22px_70px_-35px_rgba(0,0,0,0.9)] backdrop-blur">
-          {/* ánh sáng góc card */}
+          {/* Card corner glow */}
           <div className="pointer-events-none absolute -top-20 -right-20 h-48 w-48 rounded-full bg-emerald-500/10 blur-3xl" />
 
           <div className="relative space-y-6">
@@ -151,7 +151,7 @@ export function CodeFetcherClient() {
               </div>
             </div>
 
-            {/* OTP big */}
+            {/* OTP big display */}
             <div className="rounded-2xl border border-zinc-800 bg-zinc-950/90 p-5">
               <div className="flex items-center justify-between gap-2">
                 <p className="text-xs font-medium tracking-[0.18em] text-zinc-500 uppercase">

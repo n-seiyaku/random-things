@@ -1,7 +1,7 @@
 import { getLatestOtp } from '@/lib/gmail'
 import { NextRequest, NextResponse } from 'next/server'
 
-export const dynamic = 'force-dynamic' // để luôn chạy server
+export const dynamic = 'force-dynamic' // force dynamic rendering
 
 export async function GET(req: NextRequest) {
   try {

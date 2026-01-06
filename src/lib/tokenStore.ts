@@ -72,7 +72,7 @@ export async function saveTokens({
   }
 
   try {
-    // Use parameterized query with ON CONFLICT to update if exists
+      // Use parameterized query with ON CONFLICT to update if exists
     await sql`
       INSERT INTO ${sql.unsafe(TABLE_NAME)} (id, access_token, refresh_token, expires_at)
       VALUES (${TOKEN_ROW_ID}, ${accessToken}, ${refreshToken}, ${expiresAt})
@@ -84,6 +84,6 @@ export async function saveTokens({
     console.log('[tokenStore] Tokens saved/updated successfully')
   } catch (err) {
     console.error('[tokenStore] Save tokens error:', err)
-    throw err // Re-throw để route handler có thể xử lý
+    throw err // Re-throw for route handler to catch
   }
 }

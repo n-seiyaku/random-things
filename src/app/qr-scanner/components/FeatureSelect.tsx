@@ -12,7 +12,7 @@ interface Props {
 export default function FeatureSelect({ feature, setFeature }: Props) {
   const sliderRef = useRef<HTMLDivElement | null>(null)
 
-  // animate giống Header (Apple-like)
+  // Animate like Header (Apple-like)
   const isInitialized = useRef(false)
   useGSAP(() => {
     if (!sliderRef.current) return
@@ -55,7 +55,7 @@ export default function FeatureSelect({ feature, setFeature }: Props) {
 
   return (
     <div className="relative mb-4 flex w-44 overflow-hidden rounded-2xl border border-zinc-700 bg-zinc-900/70 p-1">
-      {/* slider chạy   */}
+      {/* sliding background */}
       <div
         ref={sliderRef}
         className={`absolute top-1 bottom-1 w-1/2 rounded-xl shadow-lg transition-colors ${feature === 'camera' ? 'bg-emerald-600/70' : 'bg-rose-500/70'}`}

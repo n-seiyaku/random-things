@@ -28,10 +28,10 @@ export default function CameraScan({
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const cameraScannerRef = useRef<QrScanner | null>(null)
 
-  // ====== CAMERA: start/stop & crop frame khi quét được ======
+  // CAMERA: start/stop & crop frame when detected
   const toggleCamera = async () => {
     if (isCameraActive) {
-      // tắt camera nếu đang bật
+      // stop camera if active
       cameraScannerRef.current?.stop()
       cameraScannerRef.current?.destroy()
       cameraScannerRef.current = null
@@ -52,7 +52,7 @@ export default function CameraScan({
           setStatus('success')
           setMessage(t.cameraFound)
 
-          // --- CẮT QR TỪ FRAME HIỆN TẠI CỦA VIDEO ---
+          // CROP QR FROM CURRENT VIDEO FRAME
           if (
             videoRef.current &&
             cornerPoints &&
@@ -70,7 +70,7 @@ export default function CameraScan({
             setQrOnlyUrl(dataUrl)
           }
 
-          // Dừng camera & destroy scanner → frame “đứng hình”
+          // Stop camera & destroy scanner -> freeze frame
           if (cameraScannerRef.current) {
             await cameraScannerRef.current.stop()
             cameraScannerRef.current.destroy()
@@ -97,7 +97,7 @@ export default function CameraScan({
     }
   }
 
-  // Cleanup camera khi unmount
+  // Cleanup camera on unmount
   useEffect(() => {
     return () => {
       if (cameraScannerRef.current) {
@@ -135,21 +135,21 @@ export default function CameraScan({
               type="button"
               aria-label="Đổi cam trước/sau"
               onClick={async () => {
-                // Stop camera hiện tại
+                // Stop current camera
                 cameraScannerRef.current?.stop()
                 cameraScannerRef.current?.destroy()
                 cameraScannerRef.current = null
                 setIsCameraActive(false)
 
-                // Đợi một chút để camera stop hoàn toàn
+                // Wait a bit for camera to stop completely
                 await new Promise((resolve) => setTimeout(resolve, 100))
 
-                // Thay đổi camera type
+                // Switch camera type
                 setCameraType((type) =>
                   type === 'environment' ? 'user' : 'environment'
                 )
 
-                // Start camera mới với camera type đã thay đổi
+                // Start new camera with switched type
                 if (videoRef.current) {
                   try {
                     const scanner = new QrScanner(
@@ -164,7 +164,7 @@ export default function CameraScan({
                         setStatus('success')
                         setMessage(t.cameraFound)
 
-                        // --- CẮT QR TỪ FRAME HIỆN TẠI CỦA VIDEO ---
+                        // CROP QR FROM CURRENT VIDEO FRAME
                         if (
                           videoRef.current &&
                           cornerPoints &&
@@ -188,7 +188,7 @@ export default function CameraScan({
                           setQrOnlyUrl(dataUrl)
                         }
 
-                        // Dừng camera & destroy scanner → frame "đứng hình"
+                        // Stop camera & destroy scanner -> freeze frame
                         if (cameraScannerRef.current) {
                           await cameraScannerRef.current.stop()
                           cameraScannerRef.current.destroy()
@@ -217,7 +217,7 @@ export default function CameraScan({
               }}
               className="absolute top-5 right-4 z-20 m-0 p-0 text-zinc-100 transition disabled:cursor-not-allowed disabled:opacity-40"
             >
-              {/* icon chuyển camera */}
+              {/* camera switch icon */}
               <span className="material-symbols-outlined flex h-9 w-9 items-center justify-center rounded-full bg-transparent p-0 text-[2rem] shadow-none">
                 flip_camera_android
               </span>

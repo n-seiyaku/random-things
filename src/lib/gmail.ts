@@ -29,9 +29,7 @@ type GmailPart = {
   parts?: GmailPart[] | null
 }
 
-/**
- * Lấy access_token từ refresh_token (server-side, chạy trong Worker)
- */
+// Retrieve access_token from refresh_token (server-side, runs in Worker)
 async function getAccessToken(forceRefresh = false): Promise<string | null> {
   const clientId = process.env.GOOGLE_CLIENT_ID
   const clientSecret = process.env.GOOGLE_CLIENT_SECRET
@@ -71,7 +69,7 @@ async function getAccessToken(forceRefresh = false): Promise<string | null> {
   if (!refreshToken) {
     console.error('[gmail] No refresh token found in cache/env/DB')
     throw new Error(
-      'Missing refresh token. Add GOOGLE_REFRESH_TOKEN hoặc lưu trong Neon/Postgres.'
+      'Missing refresh token. Add GOOGLE_REFRESH_TOKEN or store in Neon/Postgres.'
     )
   }
 
@@ -94,7 +92,7 @@ async function getAccessToken(forceRefresh = false): Promise<string | null> {
     const message = JSON.stringify(data)
     if (typeof data?.error === 'string' && data.error === 'invalid_grant') {
       throw new Error(
-        'Refresh token hết hạn hoặc bị thu hồi. Vào /google-connect để đăng nhập lại và lấy refresh_token mới. '
+        'Refresh token expired or revoked. Go to /google-connect to login again and get a new refresh_token. '
       )
     }
 
@@ -113,7 +111,7 @@ async function getAccessToken(forceRefresh = false): Promise<string | null> {
     refreshToken,
   }
 
-  // Nếu Google cấp refresh_token mới (hiếm), cập nhật cache để dùng cho lần tiếp theo
+  // If Google issues a new refresh_token (rare), update cache for next use
   if (typeof data.refresh_token === 'string' && data.refresh_token.length > 0) {
     tokenCache.refreshToken = data.refresh_token
   }
@@ -131,9 +129,7 @@ async function getAccessToken(forceRefresh = false): Promise<string | null> {
   return tokenCache.accessToken
 }
 
-/**
- * Gọi Gmail API list messages bằng fetch
- */
+// Call Gmail API list messages using fetch
 async function listMessages(query: string, maxResults = 5) {
   const userId = process.env.GMAIL_USER || 'me'
 
@@ -155,9 +151,7 @@ async function listMessages(query: string, maxResults = 5) {
   return (data.messages ?? []) as { id: string }[]
 }
 
-/**
- * Gọi Gmail API get message full
- */
+// Call Gmail API get message full
 async function getMessage(messageId: string): Promise<GmailMessage> {
   const userId = process.env.GMAIL_USER || 'me'
 
@@ -188,7 +182,7 @@ async function fetchWithAutoRefresh(url: URL) {
   })
 
   if (res.status === 401 || res.status === 403) {
-    // access_token có thể đã hết hạn → thử refresh lại 1 lần
+    // access_token might be expired -> try refreshing once
     const retryToken = await getAccessToken(true)
     const retryRes = await fetch(url.toString(), {
       headers: {
@@ -202,9 +196,7 @@ async function fetchWithAutoRefresh(url: URL) {
   return res
 }
 
-/**
- * Hàm public đang được /api/latest-otp dùng
- */
+// Public function used by /api/latest-otp
 export async function getLatestOtp() {
   const query =
     process.env.OTP_SEARCH_QUERY ??
@@ -235,14 +227,12 @@ export async function getLatestOtp() {
   }
 }
 
-/**
- * Lấy text/plain từ payload
- */
+// Extract text/plain from payload
 function extractPlainTextFromMessage(msg: GmailMessage): string {
   const payload = msg.payload
   if (!payload) return ''
 
-  // Nếu multipart thì duyệt parts
+  // If multipart, iterate parts
   if (payload.parts && payload.parts.length > 0) {
     const textPart = findTextPart(payload.parts)
     if (textPart?.body?.data) {
@@ -250,7 +240,7 @@ function extractPlainTextFromMessage(msg: GmailMessage): string {
     }
   }
 
-  // Nếu body trực tiếp
+  // If body direct
   if (payload.body?.data) {
     return decodeBase64Url(payload.body.data)
   }
@@ -271,14 +261,12 @@ function findTextPart(parts: GmailPart[]): GmailPart | null {
   return null
 }
 
-/**
- * Giải mã base64url safe string → UTF-8
- */
+// Decode base64url safe string -> UTF-8
 function decodeBase64Url(data: string): string {
   const base64 = data.replace(/-/g, '+').replace(/_/g, '/')
   const padded = base64 + '='.repeat((4 - (base64.length % 4)) % 4)
 
-  // Ưu tiên atob (có trên browser/Cloudflare), fallback Buffer trên Node
+  // Prioritize atob (available on browser/Cloudflare), fallback Buffer on Node
   if (typeof atob === 'function') {
     const binary = atob(padded)
     const bytes = Uint8Array.from(binary, (c) => c.charCodeAt(0))
@@ -292,9 +280,7 @@ function decodeBase64Url(data: string): string {
   throw new Error('No base64 decoder available in this runtime')
 }
 
-/**
- * Regex bắt OTP trong text
- */
+// Regex to catch OTP in text
 function extractOtpFromText(text: string | null | undefined): string | null {
   if (!text) return null
 
