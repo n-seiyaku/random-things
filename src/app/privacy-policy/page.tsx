@@ -32,7 +32,7 @@ export default function PrivacyPolicyPage() {
               <div className="text-sm text-zinc-400 space-y-1">
                 <p>App name: <span className="text-zinc-200">Random Things</span></p>
                 <p>Owner: <span className="text-zinc-200">Nguyễn Thanh Nhàn</span></p>
-                <p>Domain: <a href="https://random-things-ziaz.vercel.app" className="text-emerald-400 hover:text-emerald-300 transition-colors">https://random-things-ziaz.vercel.app</a></p>
+                <p>Domain: <a href="https://www.nhannt.io.vn" className="text-emerald-400 hover:text-emerald-300 transition-colors">https://www.nhannt.io.vn</a></p>
                 <p>Contact: <a href="mailto:nhannt.gm@gmail.com" className="text-emerald-400 hover:text-emerald-300 transition-colors">nhannt.gm@gmail.com</a></p>
                 <p>Last updated: <span className="text-zinc-200">05 Jan 2026</span></p>
               </div>
